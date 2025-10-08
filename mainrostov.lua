@@ -12,7 +12,7 @@ MainFrame.Name = "MainFrame"
 MainFrame.Size = UDim2.new(0, 531, 0, 22)
 MainFrame.Position = UDim2.new(0.534, 0, 0.064, 0)
 MainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
-MainFrame.BackgroundTransparency = 0.2
+MainFrame.BackgroundTransparency = 0
 MainFrame.Parent = ScreenGui
 
 local UICorner1 = Instance.new("UICorner")
@@ -31,7 +31,7 @@ MenuFrame.Name = "MenuFrame"
 MenuFrame.Size = UDim2.new(0, 531, 0, 295)
 MenuFrame.Position = UDim2.new(0, 0, 1, 0)
 MenuFrame.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
-MenuFrame.BackgroundTransparency = 0.2
+MenuFrame.BackgroundTransparency = 0
 MenuFrame.Visible = false
 MenuFrame.Parent = MainFrame
 
