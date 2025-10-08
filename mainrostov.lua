@@ -6,7 +6,6 @@ local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 
--- Главный фрейм
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Size = UDim2.new(0, 531, 0, 22)
@@ -25,7 +24,6 @@ UIStroke1.Thickness = 0
 UIStroke1.Transparency = 0
 UIStroke1.Parent = MainFrame
 
--- Фрейм меню
 local MenuFrame = Instance.new("Frame")
 MenuFrame.Name = "MenuFrame"
 MenuFrame.Size = UDim2.new(0, 531, 0, 295)
@@ -45,7 +43,6 @@ MenuFrameUIStroke.Thickness = 0
 MenuFrameUIStroke.Transparency = 0
 MenuFrameUIStroke.Parent = MenuFrame
 
--- Фрейм для чекбоксов
 local ChFrame = Instance.new("Frame")
 ChFrame.Name = "ChFrame"
 ChFrame.Size = UDim2.new(0, 512, 0, -1)
@@ -53,7 +50,6 @@ ChFrame.Position = UDim2.new(0.017, 0, 0.125, 0)
 ChFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 ChFrame.Parent = MenuFrame
 
--- Фрейм для бота
 local FrameBot = Instance.new("Frame")
 FrameBot.Name = "FrameBot"
 FrameBot.Size = UDim2.new(0, 531, 0, 258)
@@ -62,7 +58,6 @@ FrameBot.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
 FrameBot.Visible = false
 FrameBot.Parent = MenuFrame
 
--- Кнопка открытия/закрытия
 local OpenCloseButton = Instance.new("TextButton")
 OpenCloseButton.Name = "OpenCloseButton"
 OpenCloseButton.Size = UDim2.new(0, 22, 0, 22)
@@ -74,7 +69,6 @@ OpenCloseButton.Text = "▼"
 OpenCloseButton.Font = Enum.Font.SourceSans
 OpenCloseButton.Parent = MainFrame
 
--- Название
 local NameLabel = Instance.new("TextLabel")
 NameLabel.Name = "NameLabel"
 NameLabel.Size = UDim2.new(0, 200, 0, 22)
@@ -86,7 +80,6 @@ NameLabel.Text = "RostovCheat  ///   Powered by WizoXU"
 NameLabel.Font = Enum.Font.SourceSans
 NameLabel.Parent = MainFrame
 
--- Кнопка Bot
 local BotButton = Instance.new("TextButton")
 BotButton.Name = "BotButton"
 BotButton.Size = UDim2.new(0, 22, 0, 22)
@@ -102,7 +95,6 @@ local BotUICorner = Instance.new("UICorner")
 BotUICorner.CornerRadius = UDim.new(0.3, 0)
 BotUICorner.Parent = BotButton
 
--- Кнопка AutoFarm
 local AutoFarmButton = Instance.new("TextButton")
 AutoFarmButton.Name = "AutoFarmButton"
 AutoFarmButton.Size = UDim2.new(0, 22, 0, 22)
@@ -119,7 +111,6 @@ local AutoFarmUICorner = Instance.new("UICorner")
 AutoFarmUICorner.CornerRadius = UDim.new(0.8, 0)
 AutoFarmUICorner.Parent = AutoFarmButton
 
--- Текст AutoFarm
 local AutoFarmLabel = Instance.new("TextLabel")
 AutoFarmLabel.Name = "AutoFarmLabel"
 AutoFarmLabel.Size = UDim2.new(0, 52, 0, 31)
@@ -131,7 +122,6 @@ AutoFarmLabel.Text = "AutoFarm"
 AutoFarmLabel.Font = Enum.Font.SourceSans
 AutoFarmLabel.Parent = AutoFarmButton
 
--- Перетаскивание главного фрейма
 local dragging = false
 local dragInput, dragStart, startPos
 
@@ -166,7 +156,6 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
--- Перетаскивание MenuFrame
 local frameDragging = false
 local frameDragInput, frameDragStart, frameStartPos
 
@@ -201,7 +190,6 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
--- Анимация обводки
 local speed = 1.5
 local waveCount = 3
 
@@ -220,7 +208,6 @@ RunService.Heartbeat:Connect(function()
     updateStrokeColor()
 end)
 
--- Функции кнопок
 OpenCloseButton.MouseButton1Click:Connect(function()
     MenuFrame.Visible = not MenuFrame.Visible
     if MenuFrame.Visible then
@@ -239,7 +226,6 @@ BotButton.MouseButton1Click:Connect(function()
     end
 end)
 
--- AutoFarm функция
 local autoTeleportEnabled = false
 local isRunning = false
 local player = Players.LocalPlayer
