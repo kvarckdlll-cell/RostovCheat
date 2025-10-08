@@ -18,12 +18,6 @@ local UICorner1 = Instance.new("UICorner")
 UICorner1.CornerRadius = UDim.new(0)
 UICorner1.Parent = MainFrame
 
-local UIStroke1 = Instance.new("UIStroke")
-UIStroke1.Color = Color3.new(0, 0, 0)
-UIStroke1.Thickness = 0
-UIStroke1.Transparency = 0
-UIStroke1.Parent = MainFrame
-
 local MenuFrame = Instance.new("Frame")
 MenuFrame.Name = "MenuFrame"
 MenuFrame.Size = UDim2.new(0, 531, 0, 295)
@@ -37,16 +31,10 @@ local MenuFrameUICorner = Instance.new("UICorner")
 MenuFrameUICorner.CornerRadius = UDim.new(0)
 MenuFrameUICorner.Parent = MenuFrame
 
-local MenuFrameUIStroke = Instance.new("UIStroke")
-MenuFrameUIStroke.Color = Color3.new(0, 0, 0)
-MenuFrameUIStroke.Thickness = 0
-MenuFrameUIStroke.Transparency = 0
-MenuFrameUIStroke.Parent = MenuFrame
-
 local ChFrame = Instance.new("Frame")
 ChFrame.Name = "ChFrame"
 ChFrame.Size = UDim2.new(0, 512, 0, -1)
-ChFrame.Position = UDim2.new(0.017, 0, 0.125, 0)
+ChFrame.Position = UDim2.new(0.017, 0,0.125, 0)
 ChFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 ChFrame.Parent = MenuFrame
 
@@ -82,9 +70,9 @@ NameLabel.Parent = MainFrame
 
 local BotButton = Instance.new("TextButton")
 BotButton.Name = "BotButton"
-BotButton.Size = UDim2.new(0, 22, 0, 22)
-BotButton.Position = UDim2.new(0, 0, 0, 0)
-BotButton.BackgroundTransparency = 1
+BotButton.Size = UDim2.new(0, 67,0, 24)
+BotButton.Position = UDim2.new(0.041, 0,0.041, 0)
+BotButton.BackgroundTransparency = 0
 BotButton.BackgroundColor3 = Color3.new(0.1255, 0.1255, 0.1255)
 BotButton.TextSize = 14
 BotButton.TextColor3 = Color3.new(1, 1, 1)
@@ -93,15 +81,15 @@ BotButton.Font = Enum.Font.SourceSans
 BotButton.Parent = MenuFrame
 
 local BotUICorner = Instance.new("UICorner")
-BotUICorner.CornerRadius = UDim.new(0.3, 0)
+BotUICorner.CornerRadius = UDim.new(0,3, 0)
 BotUICorner.Parent = BotButton
 
 local AutoFarmButton = Instance.new("TextButton")
 AutoFarmButton.Name = "AutoFarmButton"
-AutoFarmButton.Size = UDim2.new(0, 22, 0, 22)
-AutoFarmButton.Position = UDim2.new(0, 0, 0, 0)
+AutoFarmButton.Size = UDim2.new(0, 26,0, 26)
+AutoFarmButton.Position = UDim2.new(0.019, 0,0.053, 0)
 AutoFarmButton.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-AutoFarmButton.BackgroundTransparency = 1
+AutoFarmButton.BackgroundTransparency = 0
 AutoFarmButton.TextSize = 14
 AutoFarmButton.TextColor3 = Color3.fromRGB(0, 110, 255)
 AutoFarmButton.Text = ""
@@ -109,7 +97,7 @@ AutoFarmButton.Font = Enum.Font.SourceSans
 AutoFarmButton.Parent = FrameBot
 
 local AutoFarmUICorner = Instance.new("UICorner")
-AutoFarmUICorner.CornerRadius = UDim.new(0.8, 0)
+AutoFarmUICorner.CornerRadius = UDim.new(0,5, 0)
 AutoFarmUICorner.Parent = AutoFarmButton
 
 local AutoFarmLabel = Instance.new("TextLabel")
@@ -119,9 +107,10 @@ AutoFarmLabel.Position = UDim2.new(1.407, 0, -0.105, 0)
 AutoFarmLabel.BackgroundTransparency = 1
 AutoFarmLabel.TextSize = 18
 AutoFarmLabel.TextColor3 = Color3.new(1, 1, 1)
-AutoFarmLabel.Text = "AutoFarm - работа грузчик"
+AutoFarmLabel.Text = "AutoFarm"
 AutoFarmLabel.Font = Enum.Font.SourceSans
 AutoFarmLabel.Parent = AutoFarmButton
+
 
 local dragging = false
 local dragInput, dragStart, startPos
@@ -155,58 +144,6 @@ UserInputService.InputChanged:Connect(function(input)
     if input == dragInput and dragging then
         update(input)
     end
-end)
-
-local frameDragging = false
-local frameDragInput, frameDragStart, frameStartPos
-
-local function updateFrame(input)
-    local delta = input.Position - frameDragStart
-    MenuFrame.Position = UDim2.new(frameStartPos.X.Scale, frameStartPos.X.Offset + delta.X, frameStartPos.Y.Scale, frameStartPos.Y.Offset + delta.Y)
-end
-
-MenuFrame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        frameDragging = true
-        frameDragStart = input.Position
-        frameStartPos = MenuFrame.Position
-        
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                frameDragging = false
-            end
-        end)
-    end
-end)
-
-MenuFrame.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement then
-        frameDragInput = input
-    end
-end)
-
-UserInputService.InputChanged:Connect(function(input)
-    if input == frameDragInput and frameDragging then
-        updateFrame(input)
-    end
-end)
-
-local speed = 1.5
-local waveCount = 3
-
-local function updateStrokeColor()
-    local time = tick() * speed
-    local waveValue = 0
-    for i = 1, waveCount do
-        waveValue = waveValue + math.sin(time + i * math.pi/waveCount)
-    end
-    waveValue = waveValue / waveCount
-    local normalizedValue = (waveValue + 1) / 2
-    MenuFrameUIStroke.Color = Color3.new(normalizedValue, normalizedValue, normalizedValue)
-end
-
-RunService.Heartbeat:Connect(function()
-    updateStrokeColor()
 end)
 
 OpenCloseButton.MouseButton1Click:Connect(function()
