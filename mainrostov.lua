@@ -111,6 +111,212 @@ AutoFarmLabel.Text = "AutoFarm"
 AutoFarmLabel.Font = Enum.Font.SourceSans
 AutoFarmLabel.Parent = AutoFarmButton
 
+local ButtonVisuals = Instance.new("TextButton")
+ButtonVisuals.Name = "ButtonVisuals"
+ButtonVisuals.Size = UDim2.new(0, 67,0, 24)
+ButtonVisuals.Position = UDim2.new(0.202, 0,0.041, 0)
+ButtonVisuals.BackgroundTransparency = 0
+ButtonVisuals.BackgroundColor3 = Color3.new(0.1255, 0.1255, 0.1255)
+ButtonVisuals.TextSize = 14
+ButtonVisuals.TextColor3 = Color3.new(1, 1, 1)
+ButtonVisuals.Text = "Visuals"
+ButtonVisuals.Font = Enum.Font.SourceSans
+ButtonVisuals.Parent = MenuFrame
+
+local VisualsUICorner = Instance.new("UICorner")
+VisualsUICorner.CornerRadius = UDim.new(0,3, 0)
+VisualsUICorner.Parent = ButtonVisuals
+
+local FrameVisuals = Instance.new("Frame")
+FrameVisuals.Name = "FrameVisuals"
+FrameVisuals.Size = UDim2.new(0, 531, 0, 258)
+FrameVisuals.Position = UDim2.new(0, 0, 0.125, 0)
+FrameVisuals.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
+FrameVisuals.Visible = false
+FrameVisuals.Parent = MenuFrame
+
+local ChamsCar = Instance.new("TextButton")
+ChamsCar.Name = "ChamsCar"
+ChamsCar.Size = UDim2.new(0, 26,0, 26)
+ChamsCar.Position = UDim2.new(0.019, 0,0.053, 0)
+ChamsCar.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+ChamsCar.BackgroundTransparency = 0
+ChamsCar.TextSize = 14
+ChamsCar.TextColor3 = Color3.fromRGB(0, 110, 255)
+ChamsCar.Text = ""
+ChamsCar.Font = Enum.Font.SourceSans
+ChamsCar.Parent = FrameVisuals
+
+local ChamsCarUICorner = Instance.new("UICorner")
+ChamsCarUICorner.CornerRadius = UDim.new(0,3, 0)
+ChamsCarUICorner.Parent = ChamsCar
+
+local ChamsCarLabel = Instance.new("TextLabel")
+ChamsCarLabel.Name = "ChamsCarLabel"
+ChamsCarLabel.Size = UDim2.new(0, 52, 0, 31)
+ChamsCarLabel.Position = UDim2.new(1.407, 0, -0.105, 0)
+ChamsCarLabel.BackgroundTransparency = 1
+ChamsCarLabel.TextSize = 18
+ChamsCarLabel.TextColor3 = Color3.new(1, 1, 1)
+ChamsCarLabel.Text = "ChamsCar"
+ChamsCarLabel.Font = Enum.Font.SourceSans
+ChamsCarLabel.Parent = ChamsCar
+
+local ChamsBankomat = Instance.new("TextButton")
+ChamsBankomat.Name = "ChamsBankomat"
+ChamsBankomat.Size = UDim2.new(0, 26,0, 26)
+ChamsBankomat.Position = UDim2.new(0.019, 0,0.2, 0)
+ChamsBankomat.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+ChamsBankomat.BackgroundTransparency = 0
+ChamsBankomat.TextSize = 14
+ChamsBankomat.TextColor3 = Color3.fromRGB(0, 110, 255)
+ChamsBankomat.Text = ""
+ChamsBankomat.Font = Enum.Font.SourceSans
+ChamsBankomat.Parent = FrameVisuals
+
+local ChamsBankomatUICorner = Instance.new("UICorner")
+ChamsBankomatUICorner.CornerRadius = UDim.new(0,3, 0)
+ChamsBankomatUICorner.Parent = ChamsBankomat
+
+local ChamsBankomatLabel = Instance.new("TextLabel")
+ChamsBankomatLabel.Name = "ChamsBankomatLabel"
+ChamsBankomatLabel.Size = UDim2.new(0, 100, 0, 31)
+ChamsBankomatLabel.Position = UDim2.new(1.407, 0, -0.105, 0)
+ChamsBankomatLabel.BackgroundTransparency = 1
+ChamsBankomatLabel.TextSize = 18
+ChamsBankomatLabel.TextColor3 = Color3.new(1, 1, 1)
+ChamsBankomatLabel.Text = "ChamsBankomat"
+ChamsBankomatLabel.Font = Enum.Font.SourceSans
+ChamsBankomatLabel.Parent = ChamsBankomat
+
+local carHighlightsEnabled = false
+local carActiveHighlights = {}
+
+local bankomatHighlightsEnabled = false
+local bankomatActiveHighlights = {}
+
+local function createInfiniteHighlight(part, color)
+    local highlight = Instance.new("Highlight")
+    highlight.Adornee = part
+    highlight.Parent = part
+    highlight.FillTransparency = 1
+    highlight.OutlineColor = color
+    highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    
+    return highlight
+end
+
+local function enableCarHighlights()
+    local carsFolder = workspace:FindFirstChild("Cars")
+    
+    if carsFolder then
+        for _, obj in pairs(carsFolder:GetDescendants()) do
+            if obj:IsA("BasePart") then
+                local existingHighlight = obj:FindFirstChildOfClass("Highlight")
+                
+                if existingHighlight then
+                    existingHighlight:Destroy()
+                end
+                
+                local highlight = createInfiniteHighlight(obj, Color3.fromRGB(255, 0, 4))
+                table.insert(carActiveHighlights, highlight)
+            end
+        end
+        print("Подсветка Cars ВКЛЮЧЕНА!")
+        carHighlightsEnabled = true
+    else
+        warn("Папка 'Cars' не найдена в Workspace!")
+    end
+end
+
+local function disableCarHighlights()
+    for _, highlight in pairs(carActiveHighlights) do
+        if highlight and highlight.Parent then
+            highlight:Destroy()
+        end
+    end
+    
+    carActiveHighlights = {}
+    print("Подсветка Cars ВЫКЛЮЧЕНА!")
+    carHighlightsEnabled = false
+end
+
+local function toggleCarHighlights()
+    if carHighlightsEnabled then
+        disableCarHighlights()
+        return false
+    else
+        enableCarHighlights()
+        return true
+    end
+end
+
+local function enableBankomatHighlights()
+    local bankomatFolder = workspace:FindFirstChild("Bankomati")
+    
+    if bankomatFolder then
+        for _, obj in pairs(bankomatFolder:GetDescendants()) do
+            if obj:IsA("BasePart") then
+                local existingHighlight = obj:FindFirstChildOfClass("Highlight")
+                
+                if existingHighlight then
+                    existingHighlight:Destroy()
+                end
+                
+                local highlight = createInfiniteHighlight(obj, Color3.fromRGB(0, 255, 8))
+                table.insert(bankomatActiveHighlights, highlight)
+            end
+        end
+        print("Подсветка Bankomati ВКЛЮЧЕНА!")
+        bankomatHighlightsEnabled = true
+    else
+        warn("Папка 'Bankomati' не найдена в Workspace!")
+    end
+end
+
+local function disableBankomatHighlights()
+    for _, highlight in pairs(bankomatActiveHighlights) do
+        if highlight and highlight.Parent then
+            highlight:Destroy()
+        end
+    end
+    
+    bankomatActiveHighlights = {}
+    print("Подсветка Bankomati ВЫКЛЮЧЕНА!")
+    bankomatHighlightsEnabled = false
+end
+
+local function toggleBankomatHighlights()
+    if bankomatHighlightsEnabled then
+        disableBankomatHighlights()
+        return false
+    else
+        enableBankomatHighlights()
+        return true
+    end
+end
+
+ChamsCar.MouseButton1Click:Connect(function()
+    print("Кнопка ChamsCar нажата!")
+    local isEnabled = toggleCarHighlights()
+    
+    if isEnabled then
+        ChamsCar.Text = "✓"
+    else
+        ChamsCar.Text = ""
+    end
+end)
+
+ChamsBankomat.MouseButton1Click:Connect(function()
+    print("Кнопка ChamsBankomat нажата!")
+    local isEnabled = toggleBankomatHighlights()
+    
+    if isEnabled then
+        ChamsBankomat.Text = "✓"
+    else
+        ChamsBankomat.Text = ""
+    end
+end)
 
 local dragging = false
 local dragInput, dragStart, startPos
@@ -157,10 +363,23 @@ end)
 
 BotButton.MouseButton1Click:Connect(function()
     FrameBot.Visible = not FrameBot.Visible
+    FrameVisuals.Visible = false
     if FrameBot.Visible then
         BotButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        ButtonVisuals.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     else
         BotButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    end
+end)
+
+ButtonVisuals.MouseButton1Click:Connect(function()
+    FrameVisuals.Visible = not FrameVisuals.Visible
+    FrameBot.Visible = false
+    if FrameVisuals.Visible then
+        ButtonVisuals.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        BotButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    else
+        ButtonVisuals.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     end
 end)
 
@@ -289,4 +508,9 @@ AutoFarmButton.MouseButton1Click:Connect(function()
     else
         AutoFarmButton.Text = ""
     end
+end)
+
+ScreenGui.Destroying:Connect(function()
+    disableCarHighlights()
+    disableBankomatHighlights()
 end)
