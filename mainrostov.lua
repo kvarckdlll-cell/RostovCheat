@@ -2,9 +2,12 @@ local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "ZeroTracer"
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
+ScreenGui.ResetOnSpawn = false
+
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
+local ProximityPromptService = game:GetService("ProximityPromptService")
 
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
@@ -86,8 +89,8 @@ BotUICorner.Parent = BotButton
 
 local AutoFarmButton = Instance.new("TextButton")
 AutoFarmButton.Name = "AutoFarmButton"
-AutoFarmButton.Size = UDim2.new(0, 26,0, 26)
-AutoFarmButton.Position = UDim2.new(0.019, 0,0.053, 0)
+AutoFarmButton.Size = UDim2.new(0, 26, 0, 26)
+AutoFarmButton.Position = UDim2.new(0.019, 0, 0.053, 0)
 AutoFarmButton.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
 AutoFarmButton.BackgroundTransparency = 0
 AutoFarmButton.TextSize = 14
@@ -107,9 +110,36 @@ AutoFarmLabel.Position = UDim2.new(1.407, 0, -0.105, 0)
 AutoFarmLabel.BackgroundTransparency = 1
 AutoFarmLabel.TextSize = 18
 AutoFarmLabel.TextColor3 = Color3.new(1, 1, 1)
-AutoFarmLabel.Text = "AutoFarm"
+AutoFarmLabel.Text = "AutoFarm(Грузчик)"
 AutoFarmLabel.Font = Enum.Font.SourceSans
 AutoFarmLabel.Parent = AutoFarmButton
+
+local AutoFarmButton2 = Instance.new("TextButton")
+AutoFarmButton2.Name = "AutoFarmButton2"
+AutoFarmButton2.Size = UDim2.new(0, 26, 0, 26)
+AutoFarmButton2.Position = UDim2.new(0.019, 0 ,0.204, 0)
+AutoFarmButton2.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+AutoFarmButton2.BackgroundTransparency = 0
+AutoFarmButton2.TextSize = 14
+AutoFarmButton2.TextColor3 = Color3.fromRGB(0, 110, 255)
+AutoFarmButton2.Text = ""
+AutoFarmButton2.Font = Enum.Font.SourceSans
+AutoFarmButton2.Parent = FrameBot
+
+local AutoFarmLabel2 = Instance.new("TextLabel")
+AutoFarmLabel2.Name = "AutoFarmLabel2"
+AutoFarmLabel2.Size = UDim2.new(0, 52, 0, 31)
+AutoFarmLabel2.Position = UDim2.new(1.407, 0, -0.105, 0)
+AutoFarmLabel2.BackgroundTransparency = 1
+AutoFarmLabel2.TextSize = 18
+AutoFarmLabel2.TextColor3 = Color3.new(1, 1, 1)
+AutoFarmLabel2.Text = "AutoFarm(Бандит)"
+AutoFarmLabel2.Font = Enum.Font.SourceSans
+AutoFarmLabel2.Parent = AutoFarmButton2
+
+local AutoFarmUICorner2 = Instance.new("UICorner")
+AutoFarmUICorner2.CornerRadius = UDim.new(0,5, 0)
+AutoFarmUICorner2.Parent = AutoFarmButton2
 
 local ButtonVisuals = Instance.new("TextButton")
 ButtonVisuals.Name = "ButtonVisuals"
@@ -194,6 +224,27 @@ local carActiveHighlights = {}
 
 local bankomatHighlightsEnabled = false
 local bankomatActiveHighlights = {}
+
+local autoTeleportEnabled = false
+local isRunning = false
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+local autoTeleportEnabled2 = false
+local isRunning2 = false
+
+local positions = {
+    Vector3.new(5144.60595703125, 87.04823303222656, 1120.1256103515625),
+    Vector3.new(5070.3623046875, 94.11610412597656, 1124.9158935546875)
+}
+
+local positions2 = {
+    Vector3.new(4802.25048828125, 87.0907211303711, -1142.975341796875),
+    Vector3.new(67.22386932373047, 87.09380340576172, -3207.224853515625),
+    Vector3.new(-32.11979675292969, 87.09135437011719, -1515.8731689453125),
+    Vector3.new(111.8641586303711, 87.09136199951172, -164.25643920898438)
+}
 
 local function createInfiniteHighlight(part, color)
     local highlight = Instance.new("Highlight")
@@ -296,104 +347,6 @@ local function toggleBankomatHighlights()
     end
 end
 
-ChamsCar.MouseButton1Click:Connect(function()
-    print("Кнопка ChamsCar нажата!")
-    local isEnabled = toggleCarHighlights()
-    
-    if isEnabled then
-        ChamsCar.Text = "✓"
-    else
-        ChamsCar.Text = ""
-    end
-end)
-
-ChamsBankomat.MouseButton1Click:Connect(function()
-    print("Кнопка ChamsBankomat нажата!")
-    local isEnabled = toggleBankomatHighlights()
-    
-    if isEnabled then
-        ChamsBankomat.Text = "✓"
-    else
-        ChamsBankomat.Text = ""
-    end
-end)
-
-local dragging = false
-local dragInput, dragStart, startPos
-
-local function update(input)
-    local delta = input.Position - dragStart
-    MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-end
-
-MainFrame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true
-        dragStart = input.Position
-        startPos = MainFrame.Position
-        
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
-    end
-end)
-
-MainFrame.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement then
-        dragInput = input
-    end
-end)
-
-UserInputService.InputChanged:Connect(function(input)
-    if input == dragInput and dragging then
-        update(input)
-    end
-end)
-
-OpenCloseButton.MouseButton1Click:Connect(function()
-    MenuFrame.Visible = not MenuFrame.Visible
-    if MenuFrame.Visible then
-        OpenCloseButton.Text = "▼"
-    else
-        OpenCloseButton.Text = "►"
-    end
-end)
-
-BotButton.MouseButton1Click:Connect(function()
-    FrameBot.Visible = not FrameBot.Visible
-    FrameVisuals.Visible = false
-    if FrameBot.Visible then
-        BotButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-        ButtonVisuals.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    else
-        BotButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    end
-end)
-
-ButtonVisuals.MouseButton1Click:Connect(function()
-    FrameVisuals.Visible = not FrameVisuals.Visible
-    FrameBot.Visible = false
-    if FrameVisuals.Visible then
-        ButtonVisuals.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-        BotButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    else
-        ButtonVisuals.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    end
-end)
-
-local autoTeleportEnabled = false
-local isRunning = false
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-local positions = {
-    Vector3.new(5144.60595703125, 87.04823303222656, 1120.1256103515625),
-    Vector3.new(5070.3623046875, 94.11610412597656, 1124.9158935546875)
-}
-
 local function safeTeleport(position)
     if not character or not humanoidRootPart then
         character = player.Character
@@ -491,12 +444,169 @@ local function teleportationCycle()
     isRunning = false
 end
 
-player.CharacterAdded:Connect(function(newCharacter)
-    character = newCharacter
-    humanoidRootPart = newCharacter:WaitForChild("HumanoidRootPart")
-    if autoTeleportEnabled then
-        task.wait(2)
-        teleportationCycle()
+local function safeTeleport2(position)
+    if not character or not humanoidRootPart then
+        character = player.Character
+        if character then
+            humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        else
+            return false
+        end
+    end
+
+    pcall(function()
+        humanoidRootPart.CFrame = CFrame.new(position)
+    end)
+
+    return true
+end
+
+local function findProximityPrompts2()
+    local foundPrompts = {}
+    local descendants = workspace:GetDescendants()
+
+    for _, obj in ipairs(descendants) do
+        if obj:IsA("ProximityPrompt") and obj.Enabled then
+            table.insert(foundPrompts, obj)
+        end
+    end
+
+    return foundPrompts
+end
+
+local function activatePromptWithHold(prompt)
+    if not prompt or not prompt.Enabled then
+        return false
+    end
+
+    print("Активация ProximityPrompt с удержанием 3 секунды")
+    
+    pcall(function()
+        if prompt.HoldDuration > 0 then
+            prompt:InputHoldBegin()
+            
+            local holdTime = prompt.HoldDuration
+            local startTime = tick()
+            
+            while tick() - startTime < holdTime and autoTeleportEnabled2 do
+                task.wait(0.1)
+            end
+            
+            if autoTeleportEnabled2 then
+                prompt:InputHoldEnd()
+            else
+                prompt:InputHoldEnd()
+            end
+        else
+            ProximityPromptService:PromptTriggered(prompt, player)
+        end
+    end)
+
+    return true
+end
+
+local function activateNearestPromptWithHold()
+    local prompts = findProximityPrompts2()
+    local closestPrompt = nil
+    local closestDistance = math.huge
+
+    for _, prompt in ipairs(prompts) do
+        local promptPart = prompt.Parent
+        if promptPart and promptPart:IsA("Model") then
+            promptPart = promptPart.PrimaryPart
+        end
+
+        if promptPart and promptPart:IsA("BasePart") then
+            local distance = (humanoidRootPart.Position - promptPart.Position).Magnitude
+            if distance <= prompt.MaxActivationDistance and distance < closestDistance then
+                closestDistance = distance
+                closestPrompt = prompt
+            end
+        end
+    end
+
+    if closestPrompt then
+        return activatePromptWithHold(closestPrompt)
+    end
+
+    return false
+end
+
+local function waitAndActivatePromptWithHold(waitTime)
+    local activated = false
+    local startTime = tick()
+
+    while tick() - startTime < waitTime and autoTeleportEnabled2 do
+        if activateNearestPromptWithHold() then
+            activated = true
+            break
+        end
+        task.wait(0.5)
+    end
+
+    return activated
+end
+
+local function teleportationCycle2()
+    if isRunning2 then 
+        print("Цикл бандита уже запущен!")
+        return 
+    end
+
+    isRunning2 = true
+    print("Цикл телепортации бандита запущен")
+    
+    local currentPositionIndex = 1
+
+    while autoTeleportEnabled2 do
+        print("Телепортация бандита на позицию " .. currentPositionIndex)
+        
+        if safeTeleport2(positions2[currentPositionIndex]) then
+            task.wait(2)
+            
+            print("Активация ProximityPrompt с удержанием...")
+            waitAndActivatePromptWithHold(5)
+            
+            print("Ожидание 54 секунды...")
+            local waitStart = tick()
+            while tick() - waitStart < 54 and autoTeleportEnabled2 do
+                task.wait(1)
+            end
+        end
+
+        if not autoTeleportEnabled2 then break end
+        
+        currentPositionIndex = currentPositionIndex + 1
+        if currentPositionIndex > #positions2 then
+            currentPositionIndex = 1
+        end
+        
+        print("Переход к следующей позиции бандита: " .. currentPositionIndex)
+    end
+
+    print("Цикл телепортации бандита остановлен")
+    isRunning2 = false
+end
+
+ChamsCar.MouseButton1Click:Connect(function()
+    print("Кнопка ChamsCar нажата!")
+    local isEnabled = toggleCarHighlights()
+    
+    if isEnabled then
+        ChamsCar.Text = "✓"
+    else
+        ChamsCar.Text = ""
+    end
+end)
+
+ChamsBankomat.MouseButton1Click:Connect(function()
+    print("Кнопка ChamsBankomat нажата!")
+    local isEnabled = toggleBankomatHighlights()
+    
+    if isEnabled then
+        ChamsBankomat.Text = "✓"
+    else
+        ChamsBankomat.Text = ""
     end
 end)
 
@@ -507,6 +617,98 @@ AutoFarmButton.MouseButton1Click:Connect(function()
         teleportationCycle()
     else
         AutoFarmButton.Text = ""
+    end
+end)
+
+AutoFarmButton2.MouseButton1Click:Connect(function()
+    print("Кнопка AutoFarmButton2 нажата!")
+    autoTeleportEnabled2 = not autoTeleportEnabled2
+    
+    if autoTeleportEnabled2 then
+        AutoFarmButton2.Text = "✓"
+        teleportationCycle2()
+    else
+        AutoFarmButton2.Text = ""
+    end
+end)
+
+player.CharacterAdded:Connect(function(newCharacter)
+    character = newCharacter
+    humanoidRootPart = newCharacter:WaitForChild("HumanoidRootPart")
+    
+    if autoTeleportEnabled then
+        task.wait(2)
+        teleportationCycle()
+    end
+    
+    if autoTeleportEnabled2 then
+        task.wait(2)
+        teleportationCycle2()
+    end
+end)
+
+local dragging = false
+local dragInput, dragStart, startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+MainFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+MainFrame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
+
+OpenCloseButton.MouseButton1Click:Connect(function()
+    MenuFrame.Visible = not MenuFrame.Visible
+    if MenuFrame.Visible then
+        OpenCloseButton.Text = "▼"
+    else
+        OpenCloseButton.Text = "►"
+    end
+end)
+
+BotButton.MouseButton1Click:Connect(function()
+    FrameBot.Visible = not FrameBot.Visible
+    FrameVisuals.Visible = false
+    if FrameBot.Visible then
+        BotButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        ButtonVisuals.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    else
+        BotButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    end
+end)
+
+ButtonVisuals.MouseButton1Click:Connect(function()
+    FrameVisuals.Visible = not FrameVisuals.Visible
+    FrameBot.Visible = false
+    if FrameVisuals.Visible then
+        ButtonVisuals.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        BotButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    else
+        ButtonVisuals.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     end
 end)
 
